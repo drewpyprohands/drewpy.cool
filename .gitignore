@@ -1,0 +1,82 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.json
+
+# Vercel local project cache
+.vercel/
+
+# Dependencies (none required today; keep ignored if they appear)
+node_modules/
+.npm/
+.yarn/
+.pnpm-store/
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+
+# Build / cache output
+dist/
+build/
+.cache/
+.turbo/
+coverage/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.stackdump
+
+# Editors and local tooling
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Cursor local state
+.cursor/
+.cursorignore
+
+# Local scratch and one-off extracts (do not ship)
+_*.py
+_*.png
+_*.jpg
+_*.jpeg
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Not part of the live site
+sample_assets/
+moonglow_streetv4.png
+
+# Cursor instructions stay local so Vercel does not publish /AGENTS.md
+AGENTS.md

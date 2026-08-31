@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>drewpy.cool</title>
+    <meta name="description" content="A POC of my imagination" />
+    <link rel="stylesheet" href="styles.css?v=31" />
+  </head>
+  <body>
+    <svg class="svg-filters" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <filter id="night-indigo" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%">
+        <feColorMatrix
+          in="SourceGraphic"
+          type="matrix"
+          result="grade"
+          values="0.58 0.03 0.11 0 0.02
+                  0.05 0.50 0.12 0 0.03
+                  0.14 0.11 0.67 0 0.09
+                  0    0    0    1 0"
+        />
+        <feFlood flood-color="#1a0e42" flood-opacity="0.28" result="wash" />
+        <feComposite in="wash" in2="SourceAlpha" operator="in" result="clip" />
+        <feBlend in="grade" in2="clip" mode="multiply" />
+      </filter>
+    </svg>
+    <div class="page">
+      <header class="site-head">
+        <p class="site-title">DREWPY.COOL</p>
+        <p class="site-tag">A POC of my imagination</p>
+      </header>
+
+      <main class="stage-wrap">
+        <section class="stage" aria-label="Cool Cats live music scene">
+          <canvas class="backdrop" id="backdrop" width="1914" height="822"></canvas>
+
+          <div class="yard-glow yard-glow-white" id="glow-white" aria-hidden="true"></div>
+
+          <img class="moon" id="moon" alt="" />
+
+          <canvas class="clouds" id="clouds" width="1914" height="822" aria-hidden="true"></canvas>
+
+          <div class="yard-glow yard-glow-black" id="glow-black" aria-hidden="true"></div>
+
+          <canvas
+            class="band-logo"
+            id="band-logo"
+            width="280"
+            height="145"
+            role="img"
+            aria-label="Drewpy's Cool Cats"
+          ></canvas>
+
+          <div class="band" id="band">
+            <div
+              class="actor tapn"
+              id="actor-tapn"
+              role="img"
+              aria-label="Tapn on piano"
+              style="--col: 1; --row: 0;"
+            ></div>
+            <div
+              class="actor capn"
+              id="actor-capn"
+              role="img"
+              aria-label="Capn on drums"
+              style="--col: 1; --row: 0;"
+            ></div>
+            <div
+              class="actor slapn"
+              id="actor-slapn"
+              role="img"
+              aria-label="Slapn on bass"
+              style="--col: 1; --row: 0;"
+            ></div>
+          </div>
+        </section>
+
+        <div class="hud">
+          <button class="play-btn" id="play-btn" type="button" disabled>
+            Play
+          </button>
+          <div class="hud-copy">
+            <p class="song-title" id="song-title">Guaraldi Time of Year</p>
+            <p class="hud-status" id="hud-status">loading song…</p>
+          </div>
+          <label class="vol-label">
+            <span class="vol-name" aria-hidden="true">Vol</span>
+            <span class="sr-only">Volume</span>
+            <input
+              class="vol"
+              id="vol"
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value="0.3"
+            />
+          </label>
+          <div class="clock" id="clock">0:00</div>
+          <label class="seek-label">
+            <span class="sr-only">Song position</span>
+            <input
+              class="seek"
+              id="seek"
+              type="range"
+              min="0"
+              max="0"
+              value="0"
+              step="0.01"
+              disabled
+            />
+          </label>
+        </div>
+      </main>
+    </div>
+
+    <audio id="song" preload="metadata" playsinline>
+      <source src="Guaraldi Time of Yearv3.mp3" type="audio/mpeg" />
+    </audio>
+
+    <script src="script.js?v=49" defer></script>
+  </body>
+</html>
