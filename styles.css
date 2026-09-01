@@ -211,7 +211,7 @@ body {
   width: 44%;
   aspect-ratio: 256 / 272;
   z-index: 1;
-  background-image: url("capn_sheet.png");
+  background-image: url("capn_sheet_v2.png");
   background-size: 400% 400%;
   background-position: calc(var(--col) * 100% / 3) calc(var(--row) * 100% / 3);
 }

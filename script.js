@@ -39,23 +39,25 @@
   const PRESS = { down: 0, up: 1, altA: 2, altB: 3 };
   const SLAPN = { mid: 0, low: 1, high: 2, wink: 3 };
   const SLAP = { on: 0, pluck: 1, on2: 2, away: 3 };
+  // Capn v2 frames are 1-based, left-to-right, top-to-bottom.
+  // Frame 11 ({ col: 2, row: 2 }) is defective and must never be selected.
   const CAPN = {
     idle: { col: 1, row: 3 },
-    hatUp: { col: 1, row: 0 },
-    hatDown: { col: 0, row: 0 },
-    hatAndSnare: { col: 0, row: 1 },
+    hatUp: { col: 0, row: 0 },
+    hatDown: { col: 1, row: 0 },
+    hatAndSnare: { col: 3, row: 0 },
     restA: { col: 1, row: 3 },
-    restB: { col: 0, row: 3 },
-    snare: { col: 1, row: 1 },
-    snare2: { col: 0, row: 1 },
-    snare3: { col: 2, row: 1 },
-    kick: { col: 1, row: 3 },
-    kick2: { col: 0, row: 3 },
+    restB: { col: 2, row: 3 },
+    snare: { col: 0, row: 1 },
+    snare2: { col: 2, row: 1 },
+    snare3: { col: 3, row: 1 },
+    kick: { col: 3, row: 1 },
+    kick2: { col: 2, row: 0 },
     tom: [
+      { col: 0, row: 2 },
+      { col: 1, row: 2 },
+      { col: 3, row: 2 },
       { col: 0, row: 3 },
-      { col: 1, row: 3 },
-      { col: 2, row: 3 },
-      { col: 1, row: 3 },
     ],
   };
 
@@ -311,15 +313,22 @@
     return slapnSway(beats, beatsPerBar);
   }
 
+  function capnAvoidDefective(cell) {
+    if (cell && cell.col === 2 && cell.row === 2) return CAPN.idle;
+    return cell;
+  }
+
   function capnFrame(beats, playing, kit, beatsPerBar) {
-    if (!playing) return CAPN.idle;
+    if (!playing) return capnAvoidDefective(CAPN.idle);
 
     const barBeats = Math.max(3, beatsPerBar);
     const onTom = recent(kit.tom, beats, 0.32, "beat");
     const kitOver = kitEndBeat && beats >= kitEndBeat - 0.12;
     if (kitOver || kitQuiet(beats, kit)) {
-      if (onTom) return CAPN.tom[Math.floor(beats) % CAPN.tom.length];
-      return capnRestGroove(beats, barBeats);
+      if (onTom) {
+        return capnAvoidDefective(CAPN.tom[Math.floor(beats) % CAPN.tom.length]);
+      }
+      return capnAvoidDefective(capnRestGroove(beats, barBeats));
     }
 
     const pos = ((beats % barBeats) + barBeats) % barBeats;
@@ -331,14 +340,16 @@
     const snareNow = capnSnareOnBeat3(beats, kit, barBeats) || onSnare;
 
     if (snareNow) {
-      if (phase < 0.22) return CAPN.snare;
-      return onHat ? CAPN.hatAndSnare : CAPN.snare2;
+      if (phase < 0.22) return capnAvoidDefective(CAPN.snare);
+      return capnAvoidDefective(onHat ? CAPN.hatAndSnare : CAPN.snare2);
     }
 
-    if (onHat) return CAPN.hatDown;
-    if (beatInBar !== 3 && phase < 0.18) return CAPN.hatDown;
-    if (onKick) return phase < 0.12 ? CAPN.kick : CAPN.kick2;
-    return CAPN.hatUp;
+    if (onHat) return capnAvoidDefective(CAPN.hatDown);
+    if (beatInBar !== 3 && phase < 0.18) return capnAvoidDefective(CAPN.hatDown);
+    if (onKick) {
+      return capnAvoidDefective(phase < 0.12 ? CAPN.kick : CAPN.kick2);
+    }
+    return capnAvoidDefective(CAPN.hatUp);
   }
 
   function capnSnareOnBeat3(beats, kit, barBeats) {
@@ -653,19 +664,11 @@
     return new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext("2d");
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(img, 0, 0);
-        fillEnclosedHoles(ctx, canvas.width, canvas.height);
-        fixCapnEyeSpikes(ctx, canvas.width, canvas.height);
-        actors.capn.style.backgroundImage = "url(" + canvas.toDataURL("image/png") + ")";
+        actors.capn.style.backgroundImage = 'url("capn_sheet_v2.png")';
         resolve();
       };
       img.onerror = () => resolve();
-      img.src = "capn_sheet.png";
+      img.src = "capn_sheet_v2.png";
     });
   }
 
